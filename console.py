@@ -28,7 +28,7 @@ class HBNBCommand(cmd.Cmd):
         classname = match.group(1)
         method = match.group(2)
         args = match.group(3)
-        match_uid_and_args = re.search('^"([^"])"(?:, (.))?$', args)
+        match_uid_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
         if match_uid_and_args:
             uid = match_uid_and_args.group(1)
             attr_or_dict = match_uid_and_args.group(2)
@@ -43,7 +43,7 @@ class HBNBCommand(cmd.Cmd):
                 self.update_dict(classname, uid, match_dict.group(1))
                 return ""
             match_attr_and_value = re.search(
-                '^(?:"([^"])")?(?:, (.))?$', attr_or_dict)
+                '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
             if match_attr_and_value:
                 attr_and_value = (match_attr_and_value.group(
                     1) or "") + " " + (match_attr_and_value.group(2) or "")
@@ -56,15 +56,15 @@ class HBNBCommand(cmd.Cmd):
         s = s_dict.replace("'", '"')
         d = json.loads(s)
         if not classname:
-            print("* class name missing *")
+            print("** class name missing **")
         elif classname not in storage.classes():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
         elif uid is None:
-            print("* instance id missing *")
+            print("** instance id missing **")
         else:
             key = "{}.{}".format(classname, uid)
             if key not in storage.all():
-                print("* no instance found *")
+                print("** no instance found **")
             else:
                 attributes = storage.attributes()[classname]
                 for attribute, value in d.items():
@@ -93,9 +93,9 @@ class HBNBCommand(cmd.Cmd):
         """Creates an instance.
         """
         if line == "" or line is None:
-            print("* class name missing *")
+            print("** class name missing **")
         elif line not in storage.classes():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
         else:
             b = storage.classes()[line]()
             b.save()
@@ -105,17 +105,17 @@ class HBNBCommand(cmd.Cmd):
         """Prints the string representation of an instance.
         """
         if line == "" or line is None:
-            print("* class name missing *")
+            print("** class name missing **")
         else:
             words = line.split(' ')
             if words[0] not in storage.classes():
-                print("* class doesn't exist *")
+                print("** class doesn't exist **")
             elif len(words) < 2:
-                print("* instance id missing *")
+                print("** instance id missing **")
             else:
                 key = "{}.{}".format(words[0], words[1])
                 if key not in storage.all():
-                    print("* no instance found *")
+                    print("** no instance found **")
                 else:
                     print(storage.all()[key])
 
@@ -123,17 +123,17 @@ class HBNBCommand(cmd.Cmd):
         """Deletes an instance based on the class name and id.
         """
         if line == "" or line is None:
-            print("* class name missing *")
+            print("** class name missing **")
         else:
             words = line.split(' ')
             if words[0] not in storage.classes():
-                print("* class doesn't exist *")
+                print("** class doesn't exist **")
             elif len(words) < 2:
-                print("* instance id missing *")
+                print("** instance id missing **")
             else:
                 key = "{}.{}".format(words[0], words[1])
                 if key not in storage.all():
-                    print("* no instance found *")
+                    print("** no instance found **")
                 else:
                     del storage.all()[key]
                     storage.save()
@@ -144,10 +144,10 @@ class HBNBCommand(cmd.Cmd):
         if line != "":
             words = line.split(' ')
             if words[0] not in storage.classes():
-                print("* class doesn't exist *")
+                print("** class doesn't exist **")
             else:
                 nl = [str(obj) for key, obj in storage.all().items()
-                      if type(obj)._name_ == words[0]]
+                      if type(obj).__name__ == words[0]]
                 print(nl)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
@@ -158,9 +158,9 @@ class HBNBCommand(cmd.Cmd):
         """
         words = line.split(' ')
         if not words[0]:
-            print("* class name missing *")
+            print("** class name missing **")
         elif words[0] not in storage.classes():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
         else:
             matches = [
                 k for k in storage.all() if k.startswith(
@@ -171,7 +171,7 @@ class HBNBCommand(cmd.Cmd):
         """Updates an instance by adding or updating attribute.
         """
         if line == "" or line is None:
-            print("* class name missing *")
+            print("** class name missing **")
             return
 
         rex = r'^(\S+)(?:\s(\S+)(?:\s(\S+)(?:\s((?:"[^"]*")|(?:(\S)+)))?)?)?'
@@ -181,19 +181,19 @@ class HBNBCommand(cmd.Cmd):
         attribute = match.group(3)
         value = match.group(4)
         if not match:
-            print("* class name missing *")
+            print("** class name missing **")
         elif classname not in storage.classes():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
         elif uid is None:
-            print("* instance id missing *")
+            print("** instance id missing **")
         else:
             key = "{}.{}".format(classname, uid)
             if key not in storage.all():
-                print("* no instance found *")
+                print("** no instance found **")
             elif not attribute:
-                print("* attribute name missing *")
+                print("** attribute name missing **")
             elif not value:
-                print("* value missing *")
+                print("** value missing **")
             else:
                 cast = None
                 if not re.search('^".*"$', value):
@@ -215,5 +215,5 @@ class HBNBCommand(cmd.Cmd):
                 storage.all()[key].save()
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     HBNBCommand().cmdloop()
