@@ -288,4 +288,4 @@ Usage	<class name>.count()
 
 Author
 
-Benson King'ori, Quzeem Odusanwo, Benjamin Musyoki, Kevin odo
+Benjamin Musyoki, and musaabmoha
