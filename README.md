@@ -24,8 +24,6 @@ This command line interpreter serves as the frontend of the web app where users 
 
 Some of the commands available are:
 
-
-
 show
 
 create
@@ -37,8 +35,6 @@ destroy
 count
 
 And as part of the implementation of the command line interpreter coupled with the backend and file storage system, the folowing actions can be performed:
-
-
 
 Creating new objects (ex: a new User or a new Place)
 
@@ -53,7 +49,6 @@ Destroying an object
 How to start it
 
 These instructions will get you a copy of the project up and running on your local machine (Linux distro) for development and testing purposes.
-
 
 
 Installing
