@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+for x in *; do
+	if [ ! -d "$x" ]; then
+		sed -i -e 's/\r$//' "$x"
+	fi
+done
+
